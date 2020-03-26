@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
-import mouse_pointlog as mp
-from mouse_event import area_select
+from gui import mouse_pointlog as mp
+from gui.mouse_event import area_select
 from trackers import Trucker
 
 Green_lowH = 25

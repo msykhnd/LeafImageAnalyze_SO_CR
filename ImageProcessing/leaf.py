@@ -1,23 +1,17 @@
 import cv2
 import numpy as np
 import math
-import mouse_pointlog as mp
-from mouse_event import area_select
+from gui import mouse_pointlog as mp
+from gui.mouse_event import area_select
 from trackers import Trucker
+from utils.utils import imread
+
+## Recomended Pram
+## In future, use conf file
 
 Green_lowH = 25
 Green_highH = 80
 Green_lowS = 80
-
-# cv2.imread が日本語ファイル，ディレクトリを読み込めないため
-def imread(filename, flags=cv2.IMREAD_COLOR, dtype=np.uint8):
-    try:
-        n = np.fromfile(filename, dtype)
-        img = cv2.imdecode(n, flags)
-        return img
-    except Exception as e:
-        print(e)
-        return None
 
 def circle_fit(x, y):
     sumx = sum(x)

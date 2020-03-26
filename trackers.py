@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
-import mouse_pointlog as mp
-from mouse_event import area_select
+
 
 class Trucker:
     def __init__(self):

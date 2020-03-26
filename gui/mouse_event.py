@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import mouse_pointlog as mp
+from gui import mouse_pointlog as mp
 
 
 def area_select(event, x, y, flag, params):
@@ -24,7 +24,6 @@ def area_select(event, x, y, flag, params):
         if ptlist.ptnum == ptlist.ptlimit:
             # cv2.polylines(img,[ptlist.ptlist.reshape(-1,1,2)],True,(255,255,255))
             pass
-
 
 
 if __name__ == "__main__":
