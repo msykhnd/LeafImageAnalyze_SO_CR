@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
-from gui import mouse_pointlog as mp
-from gui.mouse_event import area_select
+from calcleaf.mause import mouse_pointlog as mp
+from calcleaf.gui import area_select
 from trackers import Trucker
 
 Green_lowH = 25

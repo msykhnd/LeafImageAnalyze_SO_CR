@@ -1,9 +1,8 @@
 import tkinter
-from calcleaf.gui.app import AppForm
-
+from gui import app
 
 root = tkinter.Tk()
 root.title("Leaf Image")
 root.option_add('*font', ('MS Sans Serif', 16))
-app = AppForm(master=root)
-app.mainloop()
+ap = app.AppForm(master=root)
+ap.mainloop()

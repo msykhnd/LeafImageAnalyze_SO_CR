@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 import math
-from gui import mouse_pointlog as mp
-from gui.mouse_event import area_select
 from trackers import Trucker
+from mause import mouse_pointlog as mp
+from mause.mouse_event import area_select
 from utils.utils import imread
 
 ## Recomended Pram

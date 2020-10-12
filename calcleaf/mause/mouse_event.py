@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from gui import mouse_pointlog as mp
+from mause import mouse_pointlog as mp
 
 
 def area_select(event, x, y, flag, params):
