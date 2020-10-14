@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import math
-from trackers import Trucker
+from gui.trackers import Trucker
 from mause import mouse_pointlog as mp
 from mause.mouse_event import area_select
 from utils.utils import imread
