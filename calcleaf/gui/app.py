@@ -4,12 +4,21 @@ from PIL import Image, ImageTk
 import os
 import cv2
 import csv
+import sys
 from ImageProcessing.leaf import LeafImageProcessing
 from utils.utils import imread
 
+'''GUI Size & Scale'''
+app_height = 1000
+app_width = 1200
+image_scale = 0.8
+
+'''Application GUI'''
+
+
 class AppForm(tkinter.Frame):
     def __init__(self, master=None):
-        super().__init__(master, height=1000, width=1000)
+        super().__init__(master, height=app_height, width=app_width)
         self.master = master
         self.pack()
         self.create_widgets()
@@ -18,15 +27,21 @@ class AppForm(tkinter.Frame):
         self.log_fname = ""
         self.label = ""
 
+    '''GUI window'''
+
     def create_widgets(self):
         self.canvas = tkinter.Canvas(
             self.master,
-            width=900,
-            height=900,
+            width=app_width * image_scale,
+            height=app_height * image_scale,
             relief=tkinter.RIDGE,
-            bd=0
+            bd=1
         )
-        self.canvas.place(x=10, y=10)
+        self.canvas.place(x=0, y=0)
+        # self.canvas.grid()
+
+        self.textframe = Outputview()
+        self.textframe.place(relx=image_scale + 0.01, rely=0)
 
     def menubar_create(self):
         self.menubar = tkinter.Menu(self.master)
@@ -59,6 +74,7 @@ class AppForm(tkinter.Frame):
             relpath = os.path.relpath(self.fname, start=self.log_fname)
             label = os.path.split(relpath)[0].replace(".", " ").replace("\\", "_").replace("/", "_").lstrip()
             writer.writerow([label, leaf.area_size])
+            self.textframe.text.set(str([label, leaf.area_size]))
 
     def CR_Imageprocess(self):
         leaf = LeafImageProcessing(self.fname)
@@ -68,6 +84,8 @@ class AppForm(tkinter.Frame):
             relpath = os.path.relpath(self.fname, start=self.log_fname)
             label = os.path.split(relpath)[0].replace(".", " ").replace("\\", "_").replace("/", "_").lstrip()
             writer.writerow([label, leaf.area_size])
+            self.textframe.text.set(str([label, leaf.area_size]))
+
 
     def disp_image(self, img_temp):
         self.img_temp = cv2.resize(img_temp, dsize=None, fx=0.2, fy=0.2)
@@ -88,5 +106,42 @@ class AppForm(tkinter.Frame):
         self.disp_image(self.img)
 
     def log_file_select(self):
-        self.log_fname = tkdialog.askopenfilename(filetypes=[("txt files", "*.txt")],
+        self.log_fname = tkdialog.askopenfilename(filetypes=[("txt files", "*.txt"),("csv files", "*.csv")],
                                                   initialdir=os.getcwd())
+
+
+class Outputview(tkinter.Frame):
+    def __init__(self,master= None):
+        super().__init__(master)
+        self.pack()
+        self.text = tkinter.StringVar()
+        self.text.set("None")
+        self.create_widgets()
+
+    def create_widgets(self):
+        label = tkinter.Label(self,textvariable=self.text)
+        label.pack()
+
+    # def view_output(self,f_name):
+    #     with open(f_name, 'r') as f:
+    #         self.text = f.readlines()
+
+    # '''標準出力のリダイレクトクラス'''
+    # class IORedirector(object):
+    #     def __init__(self, text_area):
+    #         self.text_area = text_area
+    #
+    # class StdoutRedirector(IORedirector):
+    #     def write(self, st):
+    #         self.text_area.insert(tkinter.INSERT, st)
+    #
+    # class StderrRedirector(IORedirector):
+    #     def write(self, st):
+    #         self.text_area.insert(tkinter.INSERT, st)
+if __name__ == '__main__':
+    root = tkinter.Tk()
+    root.title("Leaf Image")
+    root.option_add('*font', ('MS Sans Serif', 16))
+    ap = Outputview(master=root)
+    ap.mainloop()
+
