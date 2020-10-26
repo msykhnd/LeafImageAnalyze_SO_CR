@@ -90,3 +90,10 @@ class AppForm(tkinter.Frame):
     def log_file_select(self):
         self.log_fname = tkdialog.askopenfilename(filetypes=[("txt files", "*.txt")],
                                                   initialdir=os.getcwd())
+
+if __name__ == "__main__":
+    root = tkinter.Tk()
+    root.title("Leaf Image")
+    root.option_add('*font', ('MS Sans Serif', 16))
+    ap = AppForm(master=root)
+    ap.mainloop()
