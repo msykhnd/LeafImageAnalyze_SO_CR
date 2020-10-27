@@ -34,7 +34,7 @@ class AppForm(tkinter.Frame):
         self.canvas = tkinter.Canvas(
             self.master,
             width=app_width * image_scale,
-            height=app_height * image_scale,
+            height=app_height,
             relief=tkinter.RIDGE,
             bd=1
         )
@@ -42,7 +42,8 @@ class AppForm(tkinter.Frame):
         # self.canvas.grid()
 
         self.textframe = Outputview()
-        self.textframe.place(relx=image_scale + 0.01, rely=0)
+        self.textframe.place(relx=image_scale + 0.01, rely=0, width=app_width * (1 - image_scale) - 10,
+                             height=app_height)
 
     def menubar_create(self):
         self.menubar = tkinter.Menu(self.master)
@@ -67,30 +68,42 @@ class AppForm(tkinter.Frame):
         self.master.config()
 
     def SQ_Imageprocess(self):
-        leaf = LeafImageProcessing(self.fname)
-        self.img = leaf.calc_leaf_SQ()
         try:
-            with open(self.log_fname, 'a') as f:
-                writer = csv.writer(f, lineterminator='\n')
-                relpath = os.path.relpath(self.fname, start=self.log_fname)
-                label = os.path.split(relpath)[0].replace(".", " ").replace("\\", "_").replace("/", "_").lstrip()
-                writer.writerow([label, leaf.area_size])
-                self.textframe.text.set(os.path.basename(self.fname) + " " + str(leaf.area_size))
-        except FileNotFoundError as e:
-            messagebox.showerror("Error", e)
+            leaf = LeafImageProcessing(self.fname)
+            self.img = leaf.calc_leaf_SQ()
+        except:
+            pass
+        else:
+            try:
+                with open(self.log_fname, 'a') as f:
+                    writer = csv.writer(f, lineterminator='\n')
+                    relpath = os.path.relpath(self.fname, start=self.log_fname)
+                    label = os.path.split(relpath)[0].replace(".", " ").replace("\\", "_").replace("/", "_").lstrip()
+                    writer.writerow([label, leaf.area_size])
+                    # self.textframe.text.set(os.path.basename(self.fname) + "  " + str(leaf.area_size))
+                    self.textframe.insert_result(os.path.basename(self.fname) + "  " + str(leaf.area_size))
+            except FileNotFoundError as e:
+                messagebox.showerror("Error", e)
+
 
     def CR_Imageprocess(self):
-        leaf = LeafImageProcessing(self.fname)
-        self.img = leaf.calc_leaf_CR()
         try:
-            with open(self.log_fname, 'a') as f:
-                writer = csv.writer(f, lineterminator='\n')
-                relpath = os.path.relpath(self.fname, start=self.log_fname)
-                label = os.path.split(relpath)[0].replace(".", " ").replace("\\", "_").replace("/", "_").lstrip()
-                writer.writerow([label, leaf.area_size])
-                self.textframe.text.set(os.path.basename(self.fname) + " " + str(leaf.area_size))
-        except FileNotFoundError as e:
-            messagebox.showerror("Error", e)
+            leaf = LeafImageProcessing(self.fname)
+            self.img = leaf.calc_leaf_CR()
+        except:
+            pass
+        else:
+            try:
+                with open(self.log_fname, 'a') as f:
+                    writer = csv.writer(f, lineterminator='\n')
+                    relpath = os.path.relpath(self.fname, start=self.log_fname)
+                    label = os.path.split(relpath)[0].replace(".", " ").replace("\\", "_").replace("/", "_").lstrip()
+                    writer.writerow([label, leaf.area_size])
+                    # self.textframe.text.set(os.path.basename(self.fname) + "  " + str(leaf.area_size))
+                    self.textframe.insert_result(os.path.basename(self.fname) + "  " + str(leaf.area_size))
+
+            except FileNotFoundError as e:
+                messagebox.showerror("Error", e)
 
     def disp_image(self, img_temp):
         self.img_temp = cv2.resize(img_temp, dsize=None, fx=0.2, fy=0.2)
@@ -118,14 +131,21 @@ class AppForm(tkinter.Frame):
 class Outputview(tkinter.Frame):
     def __init__(self, master=None):
         super().__init__(master)
-        self.pack()
+        self.pack(padx=5, pady=5, anchor=tkinter.W)
         self.text = tkinter.StringVar()
         self.text.set("None")
         self.create_widgets()
 
     def create_widgets(self):
-        label = tkinter.Label(self, textvariable=self.text)
-        label.pack()
+        # self.label = tkinter.Label(self, textvariable=self.text)
+        self.label = tkinter.Label(self, text="Result Log", relief=tkinter.RIDGE)
+        self.label.pack(padx=5, pady=5, fill=tkinter.X)
+        self.txt = tkinter.Text(self, height=int(app_height * 0.9), width=int(app_width * (1 - image_scale)) - 100)
+        # self.textframe.insert(1.0,self.text)
+        self.txt.pack(padx=5, pady=5, anchor=tkinter.W)
+
+    def insert_result(self, str):
+        self.txt.insert("1.0", str + "\n")
 
     # def view_output(self,f_name):
     #     with open(f_name, 'r') as f:
