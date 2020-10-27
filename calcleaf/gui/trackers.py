@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-class Trucker:
+class Tracker:
     def __init__(self):
         self.max_value = 255
         self.max_value_H = 360 // 2

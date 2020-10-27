@@ -1,10 +1,11 @@
 import cv2
 import numpy as np
 import math
-from gui.trackers import Trucker
+from gui.trackers import Tracker
 from mause import mouse_pointlog as mp
 from mause.mouse_event import area_select
 from utils.utils import imread
+from utils.utils import _is_visible
 
 ## Recomended Pram
 ## In future, use conf file
@@ -12,6 +13,7 @@ from utils.utils import imread
 Green_lowH = 25
 Green_highH = 80
 Green_lowS = 80
+
 
 def circle_fit(x, y):
     sumx = sum(x)
@@ -58,6 +60,11 @@ class LeafImageProcessing:
     def mouse_pointing(self, clk_limit=4):
         pt = mp.PointLog(clk_limit)
         cv2.setMouseCallback(self.window_title, area_select, [self.window_title, self.img, pt])
+        # if cv2.getWindowProperty(self.window_title, 0) < 0:
+        #     cv2.destroyAllWindows()
+        #     print("CV2 window is closed")
+        #     return False
+
         cv2.waitKey()
         return pt.ptlist
 
@@ -92,7 +99,7 @@ class LeafImageProcessing:
 
         dst = masked_upstate
 
-        tk = Trucker()
+        tk = Tracker()
         tk.low_H = Green_lowH
         tk.low_S = Green_lowS
         tk.high_H = Green_highH
@@ -115,11 +122,20 @@ class LeafImageProcessing:
             frame_threshold = cv2.inRange(frame_HSV, (tk.low_H, tk.low_S, tk.low_V), (tk.high_H, tk.high_S, tk.high_V))
             cv2.imshow(tk.window_capture_name, dst)
             cv2.imshow(tk.window_detection_name, frame_threshold)
+
             k = cv2.waitKey(1)
-            # Escキーを押すと終了
-            if k == 27:
+            # EscかEnterキーを押すと終了
+            if k == 27 or k == 13:
                 cv2.destroyAllWindows()
                 break
+            if cv2.getWindowProperty(tk.window_capture_name, 0) < 0 or cv2.getWindowProperty(tk.window_detection_name,
+                                                                                             0) < 0:
+                cv2.destroyAllWindows()
+                return -1
+        # print( _is_visible(tk.window_capture_name))
+        # print("closed some window")
+        # cv2.destroyAllWindows()
+        # break
 
         white_pixcels = cv2.countNonZero(frame_threshold)
         self.area_size = self.chanber_length ** 2 * (white_pixcels / frame_threshold.size)
@@ -134,7 +150,7 @@ class LeafImageProcessing:
 
         dst = extracted_img
 
-        tk = Trucker()
+        tk = Tracker()
         tk.low_H = Green_lowH
         tk.low_S = Green_lowS
         tk.high_H = Green_highH
@@ -157,11 +173,16 @@ class LeafImageProcessing:
             frame_threshold = cv2.inRange(frame_HSV, (tk.low_H, tk.low_S, tk.low_V), (tk.high_H, tk.high_S, tk.high_V))
             cv2.imshow(tk.window_capture_name, dst)
             cv2.imshow(tk.window_detection_name, frame_threshold)
+
             k = cv2.waitKey(1)
-            # Escキーを押すと終了
-            if k == 27:
+            # EscかEnterキーを押すと終了
+            if k == 27 or k == 13:
                 cv2.destroyAllWindows()
                 break
+            if cv2.getWindowProperty(tk.window_capture_name, 0) < 0 or cv2.getWindowProperty(tk.window_detection_name,
+                                                                                             0) < 0:
+                cv2.destroyAllWindows()
+                return -1
 
         kernel = np.ones((5, 5), np.uint8)
         moph = cv2.morphologyEx(frame_threshold, cv2.MORPH_OPEN, kernel)
@@ -175,15 +196,3 @@ class LeafImageProcessing:
 
         self.area_size = self.chanber_length ** 2 * (white_pixcels / frame_threshold.size)
         return moph
-
-
-if __name__ == "__main__":
-    # leaf_class = LeafImageProcessing("test_CS.jpg")
-    # img = leaf_class.calc_leaf_CR()
-    # cv2.imshow("Result",img)
-
-    leaf_class = LeafImageProcessing("test_SQ.jpg")
-    img = leaf_class.calc_leaf_SQ()
-    cv2.imshow("Result", img)
-
-    print(leaf_class.area_size)
