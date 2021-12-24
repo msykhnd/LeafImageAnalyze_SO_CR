@@ -45,6 +45,6 @@ HSVバーを用いて葉部分の境界調整
 * processingの途中に手動で白or黒塗りできる機能の追加
 * Opencv部分をEscで終了する挙動の改定
 
-# Requipment
+# Requirement
 
 

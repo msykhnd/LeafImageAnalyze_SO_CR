@@ -8,7 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+*/build/
 develop-eggs/
 dist/
 distenv/
@@ -109,6 +109,7 @@ venv.bak/
 
 # others
 .eps
+*.txt
 
 # Dataset dir
 leaf_image/
