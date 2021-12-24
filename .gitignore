@@ -11,6 +11,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+distenv/
 downloads/
 eggs/
 .eggs/
@@ -111,3 +112,5 @@ venv.bak/
 
 # Dataset dir
 leaf_image/
+OldImage/
+OriginalCodes/
